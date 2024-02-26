@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.base_user import BaseUserManager
+from .Role import Role
+from .Gender import Gender
 
 
 class CustomUserManager(BaseUserManager):
@@ -25,8 +27,8 @@ class CustomUserManager(BaseUserManager):
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     id = models.AutoField(primary_key=True)
     email = models.EmailField(max_length=255, unique=True, db_index=True)
-    lastname = models.CharField(max_length=155, default="", null=False)
-    firstname = models.CharField(max_length=155, default="", null=False)
+    gender = models.ForeignKey(Gender, on_delete=models.CASCADE)
+    role = models.ForeignKey(Role, on_delete=models.CASCADE)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -38,10 +40,15 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     EMAIL_FIELD = "email"
     REQUIRED_FIELDS = []
 
-    class Meta:
-        db_table = "users"
-        verbose_name = "user"
-        verbose_name_plural = "users"
-
     def __str__(self):
         return self.email
+    
+
+class Profile (models.Model):
+    id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=155, null=False)
+    last_name = models.CharField(max_length=155, null=False)
+    profile_picture = models.CharField(max_length=155, null=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
