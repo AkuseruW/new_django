@@ -1,0 +1,1 @@
+from api.routes.UserRoutes import urlpatterns
