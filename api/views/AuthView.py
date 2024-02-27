@@ -6,15 +6,14 @@ from rest_framework.response import Response
 from rest_framework import permissions
 from api import redis_connect
 
-from api.serializers.UserSerializers import UserLoginSerializer, UserRegisterSerializer, UserProfileSerializer
+from api.serializers.AuthSerializers import UserLoginSerializer, UserRegisterSerializer, UserProfileSerializer
 from rest_framework import status
 
 class RegisterView(APIView):
     permission_classes = (permissions.AllowAny,)
     
     def post(self, request):
-        user = request.user
-        if user:
+        if request.user.is_authenticated:
             return Response("Already logged in", status=status.HTTP_200_OK)
         
         serializer = UserRegisterSerializer(data=request.data)
@@ -28,8 +27,7 @@ class LoginView(APIView):
     permission_classes = (permissions.AllowAny,)
 
     def post(self, request):
-        user = request.user
-        if user:
+        if request.user.is_authenticated:
             return Response("Already logged in", status=status.HTTP_200_OK)
         
         serializer = UserLoginSerializer(data=request.data)
