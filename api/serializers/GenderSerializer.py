@@ -1,12 +1,25 @@
 from rest_framework import serializers
-from api.models import Gender
+from api.models import Gender, InterestedInGender
 
 class GenderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Gender
-        fields = ['id', 'name', 'created_at', 'updated_at']
+        fields = '__all__'
 
-class GetGenderSerializer(serializers.ModelSerializer):
+
+class InterestedInGenderSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(read_only=True)
+
     class Meta:
-        model = Gender
-        fields = ['id', 'name']
+        model = InterestedInGender
+        fields = ('user', 'gender')
+        
+
+
+class GetInterestedInGenderSerializer(serializers.ModelSerializer):
+    gender = serializers.SlugRelatedField(slug_field='name', read_only=True)
+
+    class Meta:
+        model = InterestedInGender
+        fields = ('gender',)
+

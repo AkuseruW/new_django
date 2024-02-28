@@ -13,3 +13,4 @@ class InterestedInGender (models.Model):
 
     class Meta:
         db_table = 'api_interested_in_gender'
+        unique_together = ('gender', 'user')

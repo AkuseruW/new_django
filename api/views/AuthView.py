@@ -34,7 +34,7 @@ class LoginView(APIView):
         if serializer.is_valid(raise_exception=True):
             user = serializer.validated_data
             token = binascii.hexlify(os.urandom(20)).decode()
-            redis_connect.set(token, str(user.id), 3600)
+            redis_connect.set(token, str(user.id), 2592000)
             response = Response({"token": token, "message": "Login successful"}, status=status.HTTP_200_OK)
             response.set_cookie(
             "__session", token, max_age=2592000, httponly=True, secure=True, samesite="None"
