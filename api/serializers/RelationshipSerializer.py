@@ -12,3 +12,10 @@ class InterestedInRelationSerializer(serializers.ModelSerializer):
     class Meta:
         model = InterestedInRelation
         fields = ('relationship', 'user')
+
+class GetInterestedInRelationSerializer(serializers.ModelSerializer):
+    relationship = serializers.SlugRelatedField(slug_field='name', read_only=True)
+    user = serializers.PrimaryKeyRelatedField(read_only=True)
+    class Meta:
+        model = InterestedInRelation
+        fields = ('relationship', 'user')

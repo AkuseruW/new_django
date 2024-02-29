@@ -7,7 +7,7 @@ from rest_framework import permissions
 from api import redis_connect
 from drf_spectacular.utils import extend_schema
 
-from api.serializers.AuthSerializers import UserLoginSerializer, UserRegisterSerializer, UserProfileSerializer
+from api.serializers.AuthSerializer import UserLoginSerializer, UserRegisterSerializer, UserProfileSerializer
 from rest_framework import status
 
 
