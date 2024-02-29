@@ -2,12 +2,14 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from django.db import IntegrityError
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from drf_spectacular.utils import extend_schema
 
 from api.models import Gender, InterestedInGender
 from api.serializers.GenderSerializer import (
     GenderSerializer, InterestedInGenderSerializer, GetInterestedInGenderSerializer
 )
 
+@extend_schema(tags=["Gender"])
 class GenderViewSet(viewsets.ModelViewSet):
     queryset = Gender.objects.all()
     serializer_class = GenderSerializer
@@ -17,6 +19,7 @@ class GenderViewSet(viewsets.ModelViewSet):
             return [IsAdminUser()]
         return [IsAuthenticated()]
 
+@extend_schema(tags=["Interested In Gender"])
 class InterestedInGenderViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
@@ -31,7 +34,8 @@ class InterestedInGenderViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
-    def handle_integrity_error(self):
+    @staticmethod
+    def handle_integrity_error():
         return Response({"detail": "You have already expressed interest in this gender."}, status=status.HTTP_400_BAD_REQUEST)
 
     def create(self, request, *args, **kwargs):
@@ -42,7 +46,7 @@ class InterestedInGenderViewSet(viewsets.ModelViewSet):
             headers = self.get_success_headers(serializer.data)
             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
         except IntegrityError:
-            return self.handle_integrity_error(serializer)
+            return self.handle_integrity_error()
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
@@ -53,4 +57,4 @@ class InterestedInGenderViewSet(viewsets.ModelViewSet):
             self.perform_update(serializer)
             return Response(serializer.data)
         except IntegrityError:
-            return self.handle_integrity_error(serializer)
+            return self.handle_integrity_error()

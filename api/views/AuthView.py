@@ -5,14 +5,17 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import permissions
 from api import redis_connect
+from drf_spectacular.utils import extend_schema
 
 from api.serializers.AuthSerializers import UserLoginSerializer, UserRegisterSerializer, UserProfileSerializer
 from rest_framework import status
 
+
+@extend_schema(tags=["Authentication"], request=UserRegisterSerializer)
 class RegisterView(APIView):
     permission_classes = (permissions.AllowAny,)
-    
-    def post(self, request):
+    @staticmethod
+    def post(request):
         if request.user.is_authenticated:
             return Response("Already logged in", status=status.HTTP_200_OK)
         
@@ -23,10 +26,12 @@ class RegisterView(APIView):
                 return Response("User created", status=status.HTTP_201_CREATED)
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
+@extend_schema(tags=["Authentication"], request=UserLoginSerializer, responses={200: UserProfileSerializer})
 class LoginView(APIView):
     permission_classes = (permissions.AllowAny,)
 
-    def post(self, request):
+    @staticmethod
+    def post(request):
         if request.user.is_authenticated:
             return Response("Already logged in", status=status.HTTP_200_OK)
         
@@ -42,21 +47,25 @@ class LoginView(APIView):
             return response
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@extend_schema(tags=["Authentication"], methods=["POST"])
 class LogoutView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
-    def post(self, request):
+    @staticmethod
+    def post(request):
         token = request.headers["Authorization"].split(" ")[1]
         redis_connect.delete(token)
         response = Response({"message": "Logout successful"}, status=status.HTTP_200_OK)
         response.delete_cookie("__session")
         return response
 
-
+@extend_schema(tags=["Authentication"], methods=["GET"], responses={200: UserProfileSerializer})
 class WhoamiView(APIView):
+
     permission_classes = (permissions.IsAuthenticated,)
 
-    def get(self, request):
+    @staticmethod
+    def get(request):
         user = request.user
         if user:
             user = UserProfileSerializer(user)
