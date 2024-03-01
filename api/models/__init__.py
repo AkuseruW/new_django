@@ -8,3 +8,4 @@ from .Notification import Notification, NotificationContext
 from .Relationship import Relationship, InterestedInRelation
 from .Report import Report, ReportContext
 from .Role import Role
+from .Conversation import Conversation, Message

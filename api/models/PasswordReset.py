@@ -9,3 +9,4 @@ class PasswordReset (models.Model):
 
     class Meta:
         db_table = 'api_password_resets'
+        

@@ -49,6 +49,7 @@ django-cors-headers = "==4.3.1"
 django-redis = "==5.4.0"
 argon2-cffi = "*"
 drf-spectacular = "*"
+pillow = "*"
 
 [dev-packages]
 
