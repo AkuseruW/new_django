@@ -1,15 +1,19 @@
 from rest_framework.views import APIView
+
 from rest_framework.response import Response
 from api.models.Gender import InterestedInGender
 from api.models.Relationship import InterestedInRelation
 from rest_framework import permissions
 from django.db.models import Q
+from drf_spectacular.utils import extend_schema
 
 from api.models.User import CustomUser
 from api.serializers.UserSerialize import UserSerializer
 
 class FindMatchingUsersView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
+    
+    @extend_schema(tags=["Find Matching Users"], methods=["GET"], responses={200: UserSerializer})
     def get(self, request):
         current_user = request.user
         

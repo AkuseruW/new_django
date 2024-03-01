@@ -4,7 +4,7 @@ from api.models.User import CustomUser, Profile
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = ('id', 'first_name', 'last_name', 'profile_picture')
+        fields = ('id', 'first_name', 'last_name')
 
 class UserSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer(read_only=True)
