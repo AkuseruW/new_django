@@ -14,6 +14,7 @@ from rest_framework import status
 class RegisterView(APIView):
     permission_classes = (permissions.AllowAny,)
     
+    @staticmethod
     @extend_schema(tags=["Authentication"], request=UserRegisterSerializer, responses={201: UserProfileSerializer}, methods=["POST"])
     def post(request):
         if request.user.is_authenticated:
@@ -29,6 +30,7 @@ class RegisterView(APIView):
 class LoginView(APIView):
     permission_classes = (permissions.AllowAny,)
     
+    @staticmethod
     @extend_schema(tags=["Authentication"], request=UserLoginSerializer, responses={200: UserProfileSerializer}, methods=["POST"])
     def post(request):
         if request.user.is_authenticated:
@@ -49,6 +51,7 @@ class LoginView(APIView):
 class LogoutView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
+    @staticmethod
     @extend_schema(tags=["Authentication"], methods=["POST"], request=None, responses={200: {"message": "Logout successful"}})
     def post(request):
         token = request.headers["Authorization"].split(" ")[1]
@@ -60,6 +63,7 @@ class LogoutView(APIView):
 class WhoamiView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
+    @staticmethod
     @extend_schema(tags=["Authentication"], methods=["GET"], responses={200: UserProfileSerializer})
     def get(request):
         user = request.user

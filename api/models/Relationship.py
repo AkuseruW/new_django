@@ -13,4 +13,4 @@ class InterestedInRelation (models.Model):
 
     class Meta:
         db_table = 'api_interested_in_relation'
-        
+        unique_together = ('relationship', 'user')
