@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     "rest_framework",
     'drf_spectacular',
     "corsheaders",
+    "django.contrib.gis",
     "api",
 ]
 
@@ -90,7 +91,7 @@ WSGI_APPLICATION = "configs.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
         "NAME": os.getenv("POSTGRES_DB"),
         "USER": os.getenv("POSTGRES_USER"),
         "PASSWORD": os.getenv("POSTGRES_PASSWORD"),

@@ -3,10 +3,12 @@ FROM docker.io/python:3.12.2-slim-bookworm as python
 
 # Install apt packages
 RUN apt-get update && apt-get install --no-install-recommends -y \
-  # dependencies for building Python packages
-  build-essential \
-  # psycopg2 dependencies
-  libpq-dev
+ # dependencies for building Python packages
+ build-essential \
+ # psycopg2 dependencies
+ libpq-dev \
+ # GDAL development libraries
+ libgdal-dev 
 
 ARG BUILD_ENVIRONMENT=local
 ARG APP_HOME=/app

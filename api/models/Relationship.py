@@ -5,6 +5,9 @@ class Relationship (models.Model):
     name = models.CharField(max_length=155, null=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return self.name
 
 class InterestedInRelation (models.Model):
     id = models.AutoField(primary_key=True)
@@ -14,3 +17,6 @@ class InterestedInRelation (models.Model):
     class Meta:
         db_table = 'api_interested_in_relation'
         unique_together = ('relationship', 'user')
+        
+    def __str__(self):
+        return self.relationship.name + ' - ' + self.user.email

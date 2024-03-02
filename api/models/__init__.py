@@ -1,4 +1,4 @@
-from .User import CustomUser
+from .User import CustomUser, Profile, Photo
 from .Gender import Gender, InterestedInGender
 from .SmsVerification import SmsVerification
 from .PasswordReset import PasswordReset

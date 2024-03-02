@@ -1,6 +1,7 @@
 from uuid import uuid4
 
 from django.db import models
+from django.contrib.gis.db import models as geomodels
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.base_user import BaseUserManager
 from django.db.models import Q
@@ -33,6 +34,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     email = models.EmailField(max_length=255, unique=True, db_index=True)
     gender = models.ForeignKey(Gender, on_delete=models.CASCADE, null=True)
+    location = geomodels.PointField(null=True, blank=True, srid=4326)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -83,6 +85,9 @@ class Profile (models.Model):
     instagram = models.TextField(max_length=15, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return self.user.email + ' - ' + self.first_name + ' ' + self.last_name
 
 
 class Photo(models.Model):
