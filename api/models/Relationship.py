@@ -9,14 +9,14 @@ class Relationship (models.Model):
     def __str__(self):
         return self.name
 
-class InterestedInRelation (models.Model):
-    id = models.AutoField(primary_key=True)
-    relationship = models.ForeignKey('Relationship', on_delete=models.CASCADE)
-    user = models.ForeignKey('CustomUser', on_delete=models.CASCADE)
+# class InterestedInRelation (models.Model):
+#     id = models.AutoField(primary_key=True)
+#     relationship = models.ForeignKey('Relationship', on_delete=models.CASCADE)
+#     user = models.ForeignKey('CustomUser', on_delete=models.CASCADE)
 
-    class Meta:
-        db_table = 'api_interested_in_relation'
-        unique_together = ('relationship', 'user')
+#     class Meta:
+#         db_table = 'api_interested_in_relation'
+#         unique_together = ('relationship', 'user')
         
-    def __str__(self):
-        return self.relationship.name + ' - ' + self.user.email
+#     def __str__(self):
+#         return self.relationship.name + ' - ' + self.user.email

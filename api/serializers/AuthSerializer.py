@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model, authenticate
 from rest_framework.exceptions import ValidationError
 
-from api.models import Gender
+from api.models import Gender, UserPreference
 
 UserModel = get_user_model()
 
@@ -21,13 +21,8 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         return data
     
     def create(self, data):
-        selected_gender = data.pop('gender')
-        user = UserModel.objects.create_user(
-            email=data["email"],
-            password=data["password"],
-            gender=selected_gender        
-        )
-        user.save()
+        user = UserModel.objects.create_user(**data)
+        UserPreference.objects.create(user=user)
         return user
 
 class UserLoginSerializer(serializers.Serializer):

@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from api.models.User import CustomUser, Profile
+from api.models.User import CustomUser, Profile, UserPreference
+
 
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -11,4 +12,9 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ('id', 'email', 'profile', 'gender')
+        fields = ('id', 'email', 'profile', 'gender', 'location')
+
+class UserPreferencesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserPreference
+        fields = ('interested_in', 'relationship', 'location_min_distance', 'location_max_distance', 'age_min', 'age_max')

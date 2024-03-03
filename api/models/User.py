@@ -77,6 +77,22 @@ class Photo(models.Model):
     image = models.ImageField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def delete(self):
+    def delete(self, **kwargs):
         self.image.delete(save=False)
         super().delete()
+
+
+class UserPreference(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    interested_in = models.ForeignKey("Gender", on_delete=models.CASCADE, related_name='interested_in', null=True, blank=True)
+    relationship = models.ForeignKey("Relationship", on_delete=models.CASCADE, related_name='relationship', null=True, blank=True)
+    location_min_distance = models.FloatField(null=True, blank=True)
+    location_max_distance = models.FloatField(null=True, blank=True)
+    age_min = models.IntegerField(null=True, blank=True)
+    age_max = models.IntegerField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.user.email

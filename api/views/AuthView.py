@@ -55,7 +55,7 @@ class LogoutView(APIView):
     @extend_schema(tags=["Authentication"], methods=["POST"], request=None, responses={200: {"message": "Logout successful"}})
     def post(request):
         token = request.headers["Authorization"].split(" ")[1]
-        redis_connect.delete(token)
+        redis_connect.delete()
         response = Response({"message": "Logout successful"}, status=status.HTTP_200_OK)
         response.delete_cookie("__session")
         return response

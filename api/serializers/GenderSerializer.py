@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from api.models import Gender, InterestedInGender
+from api.models import Gender
 
 class GenderSerializer(serializers.ModelSerializer):
     class Meta:
@@ -7,19 +7,19 @@ class GenderSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class InterestedInGenderSerializer(serializers.ModelSerializer):
-    user = serializers.PrimaryKeyRelatedField(read_only=True)
+# class InterestedInGenderSerializer(serializers.ModelSerializer):
+#     user = serializers.PrimaryKeyRelatedField(read_only=True)
 
-    class Meta:
-        model = InterestedInGender
-        fields = ('user', 'gender')
+#     class Meta:
+#         model = InterestedInGender
+#         fields = ('user', 'gender')
         
 
 
-class GetInterestedInGenderSerializer(serializers.ModelSerializer):
-    gender = serializers.SlugRelatedField(slug_field='name', read_only=True)
+# class GetInterestedInGenderSerializer(serializers.ModelSerializer):
+#     gender = serializers.SlugRelatedField(slug_field='name', read_only=True)
 
-    class Meta:
-        model = InterestedInGender
-        fields = ('gender',)
+#     class Meta:
+#         model = InterestedInGender
+#         fields = ('gender',)
 

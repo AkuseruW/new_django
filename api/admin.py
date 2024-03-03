@@ -1,8 +1,8 @@
 from django.contrib import admin
-from api.models import (CustomUser, Profile, Photo, Gender, Relationship, InterestedInRelation)
+from api.models import (CustomUser, Profile, Photo, Gender, Relationship)
 
 # List of models to register
-models_to_register = [CustomUser, Profile, Photo, Gender, Relationship, InterestedInRelation]
+models_to_register = [CustomUser, Profile, Photo, Gender, Relationship]
 
 # Register models
 for model in models_to_register:
