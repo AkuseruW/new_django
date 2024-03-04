@@ -25,11 +25,12 @@ def filter_profiles(current_user, user_preferences, nearby_users):
         
         nearby_user_preferences = UserPreference.objects.get(user=nearby_user)
         nearby_user_age = nearby_user.profile.user_age()
+        nearby_user_age_range = (nearby_user_preferences.age_min, nearby_user_preferences.age_max)
         nearby_user_distance_preference = nearby_user_preferences.location_max_distance
         nearby_user_distance = nearby_user.location.distance(current_user.location)
         
         if (is_age_within_range(nearby_user_age, *current_user_age_range) and
-            is_age_within_range(current_user_age, nearby_user_preferences.age_min, nearby_user_preferences.age_max) and
+            is_age_within_range(current_user_age, *nearby_user_age_range) and
             nearby_user_distance <= nearby_user_distance_preference and
             is_gender_and_relationship_match(user_preferences, nearby_user_preferences)):
             matching_users.append(nearby_user)
