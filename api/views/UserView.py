@@ -58,3 +58,21 @@ class UserPreferencesView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     
+@extend_schema(tags=["Like User"], methods=["POST"])
+@api_view(['POST'])
+@permission_classes((permissions.IsAuthenticated,))
+def like_user(request, user_id):
+    current_user = request.user
+    target_user = CustomUser.objects.get(id=user_id)
+
+    if current_user.id == target_user.id:
+        return Response({"message": "You cannot like yourself."}, status=status.HTTP_400_BAD_REQUEST)
+
+    current_user.likes.add(target_user)
+    
+    if target_user.likes.filter(id=current_user.id).exists():
+        match = Match.objects.create(user_a=current_user, user_b=target_user)
+        match.save()
+        return Response({"message": "Its a match !"}, status=status.HTTP_201_CREATED)
+
+    return Response({"message": "User liked successfully."}, status=status.HTTP_201_CREATED)
