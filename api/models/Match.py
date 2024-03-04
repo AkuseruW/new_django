@@ -6,3 +6,4 @@ class Match (models.Model):
     user_b = models.ForeignKey('CustomUser', on_delete=models.CASCADE, related_name='matches_as_user_b')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    

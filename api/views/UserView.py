@@ -1,13 +1,19 @@
+from django.contrib.gis.measure import D
+from django.db.models import Q
+from rest_framework import status
+
+from rest_framework.decorators import api_view, permission_classes
+
+from drf_spectacular.utils import extend_schema
+from rest_framework import permissions
+from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from rest_framework.response import Response
-from django.contrib.gis.measure import D
-from rest_framework import permissions
-from django.db.models import Q
-from drf_spectacular.utils import extend_schema
-
+from api.handlers.swipe_filter import filter_profiles as filter_profiles_func
 from api.models.User import CustomUser, UserPreference
+from api.models.Match import Match
 from api.serializers.UserSerialize import UserSerializer, UserPreferencesSerializer
+
 
 class FindMatchingUsersView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
@@ -18,35 +24,18 @@ class FindMatchingUsersView(APIView):
         profiles = CustomUser.objects.exclude(id=current_user.id)
         user_preferences = UserPreference.objects.get(user=current_user)
 
-
-        profiles_by_distance = profiles.filter(
+        user_by_distance = profiles.filter(
             location__distance_lt=(
                 current_user.location, D(km=user_preferences.location_max_distance)
             )
         )
 
-        print(profiles_by_distance.query)
+        if not user_by_distance:
+            return Response({"message": "No matching user found."}, status=status.HTTP_200_OK)
 
+        filtered = filter_profiles_func(current_user, user_preferences, user_by_distance)
 
-        if not profiles_by_distance:
-            return Response({"message": "No matching user found."}, status=200)
-        
-        return Response(UserSerializer(profiles_by_distance, many=True).data)
-
-        # current_user_interested_in_genders = InterestedInGender.objects.filter(user=current_user).values_list('gender', flat=True)
-        # current_user_interested_in_relations = InterestedInRelation.objects.filter(user=current_user).values_list('relationship', flat=True)
-
-        # matching_users = CustomUser.objects.filter(
-        #     Q(id__in=InterestedInGender.objects.filter(gender__in=current_user_interested_in_genders).values_list('user', flat=True)) &
-        #     Q(id__in=InterestedInRelation.objects.filter(relationship__in=current_user_interested_in_relations).values_list('user', flat=True))
-        # ).exclude(id=current_user.id).order_by("?").first()
-
-
-        # if matching_users:
-        #     serializer = UserSerializer(matching_users)
-        #     return Response(serializer.data)
-        # else:
-        #     return Response({"message": "No matching user found."}, status=404)
+        return Response(UserSerializer(filtered, many=True).data, status=status.HTTP_200_OK)
     
 
 class UserPreferencesView(APIView):
@@ -57,7 +46,7 @@ class UserPreferencesView(APIView):
         user = request.user
         user_preference, created = UserPreference.objects.get_or_create(user=user)
         serializer = UserPreferencesSerializer( user_preference )
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     
     @extend_schema(tags=["User Preferences"], methods=["PATCH"], request=UserPreferencesSerializer, responses={200: UserPreferencesSerializer})
     def patch(self, request):
@@ -66,4 +55,6 @@ class UserPreferencesView(APIView):
         serializer = UserPreferencesSerializer( user_preference, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    

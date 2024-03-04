@@ -17,4 +17,4 @@ class UserSerializer(serializers.ModelSerializer):
 class UserPreferencesSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserPreference
-        fields = ('interested_in', 'relationship', 'location_min_distance', 'location_max_distance', 'age_min', 'age_max')
+        fields = ('interested_in', 'relationship', 'location_max_distance', 'age_min', 'age_max')
