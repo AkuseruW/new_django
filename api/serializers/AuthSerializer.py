@@ -1,10 +1,11 @@
+from django.contrib.auth import authenticate, get_user_model
 from rest_framework import serializers
-from django.contrib.auth import get_user_model, authenticate
 from rest_framework.exceptions import ValidationError
 
-from api.models import Gender, UserPreference
+from api.models import UserPreference
 
 UserModel = get_user_model()
+
 
 class UserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
@@ -19,11 +20,12 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         if not data["gender"]:
             raise ValidationError("Gender is required")
         return data
-    
+
     def create(self, data):
         user = UserModel.objects.create_user(**data)
         UserPreference.objects.create(user=user)
         return user
+
 
 class UserLoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
@@ -34,6 +36,7 @@ class UserLoginSerializer(serializers.Serializer):
         if not user:
             raise ValidationError("Invalid credentials")
         return user
+
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:

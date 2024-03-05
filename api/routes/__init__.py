@@ -9,5 +9,3 @@ urlpatterns.extend(auth_urlpatterns)
 urlpatterns.extend(gender_urlpatterns)
 urlpatterns.extend(relationship_urlpatterns)
 urlpatterns.extend(user_urlpatterns)
-
-# urlpatterns = user_urlpatterns + gender_urlpatterns

@@ -1,6 +1,9 @@
-from django.db import models
 from uuid import uuid4
+
+from django.db import models
+
 import api.utils.gets as g
+
 
 class Conversation(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
@@ -14,6 +17,7 @@ class Conversation(models.Model):
             match.delete()
 
         super().delete()
+
 
 class Message(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)

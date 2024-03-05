@@ -1,15 +1,16 @@
 from uuid import uuid4
 
-from django.db import models
-from django.contrib.gis.db import models as geomodels
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
-from django.db.models import Q
+from django.contrib.gis.db import models as geomodels
 from django.core.exceptions import ValidationError
+from django.db import models
+from django.db.models import Q
 from django.utils import timezone
 
-from api.utils.CustomUserManager import CustomUserManager
 import api.utils.gets as g
 from api.models import Match
+from api.utils.CustomUserManager import CustomUserManager
+
 from .Gender import Gender
 
 
@@ -38,7 +39,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
-    
+
     def block_profile(self, blocked_profile):
         self.likes.remove(blocked_profile)
         blocked_profile.likes.remove(self)
@@ -57,9 +58,12 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
         self.blocked_profiles.add(blocked_profile)
 
-class Profile (models.Model):
+
+class Profile(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='profile', db_index=True)
+    user = models.OneToOneField(
+        CustomUser, on_delete=models.CASCADE, related_name="profile", db_index=True
+    )
     first_name = models.CharField(max_length=155, null=False)
     last_name = models.CharField(max_length=155, null=False)
     description = models.TextField(max_length=500, null=True)
@@ -75,7 +79,14 @@ class Profile (models.Model):
         super().clean()
         if self.birthdate:
             today = timezone.now().date()
-            age = today.year - self.birthdate.year - ((today.month, today.day) < (self.birthdate.month, self.birthdate.day))
+            age = (
+                today.year
+                - self.birthdate.year
+                - (
+                    (today.month, today.day)
+                    < (self.birthdate.month, self.birthdate.day)
+                )
+            )
 
             if age < 18:
                 raise ValidationError("The user must be at least 18 years old.")
@@ -83,7 +94,14 @@ class Profile (models.Model):
     def user_age(self):
         if self.birthdate:
             today = timezone.now().date()
-            age = today.year - self.birthdate.year - ((today.month, today.day) < (self.birthdate.month, self.birthdate.day))
+            age = (
+                today.year
+                - self.birthdate.year
+                - (
+                    (today.month, today.day)
+                    < (self.birthdate.month, self.birthdate.day)
+                )
+            )
             return age
 
 
@@ -101,8 +119,20 @@ class Photo(models.Model):
 class UserPreference(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    interested_in = models.ForeignKey("Gender", on_delete=models.CASCADE, related_name='interested_in', null=True, blank=True)
-    relationship = models.ForeignKey("Relationship", on_delete=models.CASCADE, related_name='relationship', null=True, blank=True)
+    interested_in = models.ForeignKey(
+        "Gender",
+        on_delete=models.CASCADE,
+        related_name="interested_in",
+        null=True,
+        blank=True,
+    )
+    relationship = models.ForeignKey(
+        "Relationship",
+        on_delete=models.CASCADE,
+        related_name="relationship",
+        null=True,
+        blank=True,
+    )
     location_max_distance = models.FloatField(null=True, blank=True)
     age_min = models.IntegerField(null=True, blank=True)
     age_max = models.IntegerField(null=True, blank=True)
