@@ -59,14 +59,14 @@ class LoginView(APIView):
                 {"token": token, "message": "Login successful"},
                 status=status.HTTP_200_OK,
             )
-            response.set_cookie(
-                "__session",
-                token,
-                max_age=2592000,
-                httponly=True,
-                secure=True,
-                samesite="None",
-            )
+            # response.set_cookie(
+            #     "__session",
+            #     token,
+            #     max_age=2592000,
+            #     httponly=True,
+            #     secure=True,
+            #     samesite="None",
+            # )
             return response
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -83,7 +83,7 @@ class LogoutView(APIView):
     )
     def post(request):
         token = request.headers["Authorization"].split(" ")[1]
-        redis_connect.delete()
+        redis_connect.delete(token)
         response = Response({"message": "Logout successful"}, status=status.HTTP_200_OK)
         response.delete_cookie("__session")
         return response

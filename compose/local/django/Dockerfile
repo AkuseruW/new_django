@@ -1,5 +1,5 @@
 # define an alias for the specific python version used in this file.
-FROM docker.io/python:3.12.2-slim-bookworm as python
+FROM docker.io/python:3.11.8-slim-bookworm as python
 
 # Install apt packages
 RUN apt-get update && apt-get install --no-install-recommends -y \

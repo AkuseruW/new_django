@@ -3,8 +3,8 @@ from django.urls import path
 from api.views.AuthView import LoginView, LogoutView, RegisterView, WhoamiView
 
 urlpatterns = [
-    path("register/", RegisterView.as_view(), name="register"),
-    path("login/", LoginView.as_view(), name="login"),
-    path("logout/", LogoutView.as_view(), name="logout"),
+    path("signup/", RegisterView.as_view(), name="register"),
+    path("signin/", LoginView.as_view(), name="login"),
+    path("signout/", LogoutView.as_view(), name="logout"),
     path("whoami/", WhoamiView.as_view(), name="whoami"),
 ]

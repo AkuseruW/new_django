@@ -50,9 +50,9 @@ django-redis = "==5.4.0"
 argon2-cffi = "*"
 drf-spectacular = "*"
 pillow = "*"
-gdal = "==3.6.4.*"
+gdal = "==3.4.3"
 
 [dev-packages]
 
 [requires]
-python_version = "3.12"
+python_version = "3.11"
